@@ -1,0 +1,67 @@
+swagger: '2.0'
+info:
+  title: TestGtwScript
+  x-ibm-name: testgtwscript
+  version: 1.0.0
+schemes:
+  - https
+basePath: /testgtwscript
+security:
+  - clientID: []
+securityDefinitions:
+  clientID:
+    type: apiKey
+    in: header
+    name: X-IBM-Client-Id
+x-ibm-configuration:
+  cors:
+    enabled: true
+  gateway: datapower-api-gateway
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  assembly:
+    execute:
+      - operation-switch:
+          version: 2.0.0
+          title: operation-switch
+          case:
+            - operations:
+                - verb: get
+                  path: /test
+              execute:
+                - gatewayscript:
+                    version: 2.0.0
+                    title: gatewayscript
+                    source: >-
+                      context.message.header.set('Content-Type',
+                      'application/json');
+
+                      context.message.body.write({"msg": "hello"});
+            - operations:
+                - verb: post
+                  path: /test
+              execute: []
+          otherwise: []
+  properties:
+    target-url:
+      value: 'http://example.com/operation-name'
+      description: The URL of the target service
+      encoded: false
+  application-authentication:
+    certificate: false
+paths:
+  /test:
+    get:
+      responses:
+        '200':
+          schema:
+            type: string
+          description: success
+    post:
+      responses:
+        '200':
+          schema:
+            type: string
+          description: success
