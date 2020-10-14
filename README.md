@@ -50,3 +50,18 @@ console.error('>>> all_apis: ' + JSON.stringify(all_apis));
 var clientID = context.get('client.app.id');
 context.message.header.set('mycid', clientID);
 ```
+
+
+## Perform URI mapping
+In this sample we specify a small piece of code where we remove the base path in order to invoke the backend API.
+There is small gateway script to specify the new path based on the request.path
+
+```
+var rpath = context.get('request.path');
+var bpath = context.get('api.root');
+var dest_path = rpath.substr(bpath.length + 1);
+context.set('dest_path', dest_path);
+```
+
+In the invoke you can use this variable like this:
+`$(target-url)$(dest_path)`
