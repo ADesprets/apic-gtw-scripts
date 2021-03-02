@@ -59,9 +59,9 @@ var namel = context.request.parameters.name_to_return.locations[0];
 ```
 
 ## Manipulate JSON structure
-First line create a string
-Second line create a JSON object
-Third line, append the JSON object
+* First line create a string
+* Second line create a JSON object
+* Third line, append the JSON object
 
 ```
 var fmsg= "hello " + namet;
