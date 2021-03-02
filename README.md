@@ -2,7 +2,7 @@ IBM API Connect Sample Gateway scripts
 In this article we provide simple sample of gateway script useful for IBM API Connect
 
 # Introduction
-Two programation languages: XSLT and GatewayScript
+Two programing languages: XSLT and GatewayScript
 
 ## Why coding?
 
@@ -30,8 +30,48 @@ context.message.body.write({"msg": "hello"});
 ```
 ![Simple gateway script](./images/simpleresponse.png)
 
+## Manipulate parameters
+As described in the documentation (see links at the beginning of this article). Parameters are described with 2 information: the locations and the values. In the assembly you get access to the parameters using the context.request.parameters object.
+This gives you a structure containing arrays for both the locations and values. (This is normal and follows HTTP specifications).
+Let's take a simple sample, an operation with GET HTTP verb that has 2 query parameters *name_to_return* and *param2*.
+The object (for more clarity, not represented as JSON here but instead extracted from the step by step debugger) give this:
+```
+parameters: Object
+	name_to_return: Object
+		locations: Array(1)
+			0: "query"
+		values: Array(1)
+				0: "Foo"
+	param2: Object
+		locations: Array(1)
+			0: "query"
+		values: Array(1)
+			0: "Value2"
+```
+
+So to get access to the value of the name_to_return parameter (assuming only one parameter with this name), I simply use the following code:
+```
+var namet = context.request.parameters.name_to_return.values[0];
+```
+I can get access to the locations of this parameter (assuming only one parameter with this name)
+```
+var namel = context.request.parameters.name_to_return.locations[0];
+```
+
+## Manipulate JSON structure
+First line create a string
+Second line create a JSON object
+Third line, append the JSON object
+
+```
+var fmsg= "hello " + namet;
+var rt= {"msg": fmsg};
+rt.msg2 = "msg2_value";
+```
+
 ## Manipulate headers
-### Add a header for the response
+### Add a custom header for the response
+context.message.header.set('my-header1', 'my-h1-value');
 
 ### Propagate Authorization header
 ```
@@ -50,7 +90,6 @@ console.error('>>> all_apis: ' + JSON.stringify(all_apis));
 var clientID = context.get('client.app.id');
 context.message.header.set('mycid', clientID);
 ```
-
 
 ## Perform URI mapping
 In this sample we specify a small piece of code where we remove the base path in order to invoke the backend API.
